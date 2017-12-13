@@ -9,15 +9,27 @@
 
 namespace PowerLinks\OpenRtb\BidRequest;
 
+use PowerLinks\OpenRtb\BidRequest\Specification\RenderingMode;
 use PowerLinks\OpenRtb\Tools\Interfaces\Arrayable;
 use PowerLinks\OpenRtb\BidRequest\Specification\BannerMimeType;
 use PowerLinks\OpenRtb\Tools\Traits\SetterValidation;
 use PowerLinks\OpenRtb\Tools\Traits\ToArray;
+use PowerLinks\OpenRtb\Tools\Classes\ArrayCollection;
 
 class Banner implements Arrayable
 {
     use SetterValidation;
     use ToArray;
+
+    /**
+     * Array of "Format" objects representing the banner sizes permitted. If
+     * none are specified, then use of the "h" and "w" attributes is highly
+     * recommended.
+     * @see \PowerLinks\OpenRtb\BidRequest\Format
+     * @recommended
+     * @var ArrayCollection
+     */
+    protected $format;
 
     /**
      * @recommended
@@ -99,9 +111,46 @@ class Banner implements Arrayable
     protected $api;
 
     /**
+     * Relevant only for "Banner" objects used with a "Video" object in an array
+     * of companion ads. Indicates the companion banner rendering mode relative
+     * to the associated video, where 0 = concurrent, 1 = end-card.
+     * @see \PowerLinks\OpenRtb\BidRequest\Video
+     * @var int
+     */
+    protected $vcm;
+
+    /**
      * @var Ext
      */
     protected $ext;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * @param Format $format
+     * @return $this
+     */
+    public function addFormat(Format $format)
+    {
+        $this->format->add($format);
+        return $this;
+    }
+
+    /**
+     * @param ArrayCollection $format
+     * @return $this
+     */
+    public function setFormat(ArrayCollection $format)
+    {
+        $this->format = $format;
+        return $this;
+    }
 
     /**
      * @return int
@@ -418,6 +467,26 @@ class Banner implements Arrayable
     public function setApi(array $api)
     {
         $this->api = $api;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVcm()
+    {
+        return $this->vcm;
+    }
+
+    /**
+     * @param int $vcm
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setVcm($vcm)
+    {
+        $this->validateIn($vcm, RenderingMode::getAll());
+        $this->vcm = $vcm;
         return $this;
     }
 
