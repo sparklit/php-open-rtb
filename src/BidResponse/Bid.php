@@ -53,6 +53,25 @@ class Bid implements Arrayable
     protected $nurl;
 
     /**
+     * Billing notice URL called by the exchange when a winning bid becomes
+     * billable based on exchange-specific business policy (e.g., typically
+     * delivered, viewed, etc.). Substitution macros (Section 4.4) may be
+     * included.
+     * @var string
+     */
+    protected $burl;
+
+    /**
+     * Loss notice URL called by the exchange when a bid is known to have been
+     * lost. Substitution macros may be included. Exchange-specific policy may
+     * preclude support for loss notices or the disclosure of winning clearing
+     * prices resulting in ${AUCTION_PRICE} macros being removed (i.e., replaced
+     * with a zero-length string).
+     * @var string
+     */
+    protected $lurl;
+
+    /**
      * @var string
      */
     protected $adm;
@@ -221,6 +240,46 @@ class Bid implements Arrayable
     {
         $this->validateString($nurl);
         $this->nurl = $nurl;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBurl()
+    {
+        return $this->burl;
+    }
+
+    /**
+     * @param string $burl
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setBurl($burl)
+    {
+        $this->validateString($burl);
+        $this->burl = $burl;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLurl()
+    {
+        return $this->lurl;
+    }
+
+    /**
+     * @param string $lurl
+     * @return $this
+     * @throws \PowerLinks\OpenRtb\Tools\Exceptions\ExceptionInvalidValue
+     */
+    public function setLurl($lurl)
+    {
+        $this->validateString($lurl);
+        $this->lurl = $lurl;
         return $this;
     }
 
